@@ -4,7 +4,7 @@ import { AxiomSession } from './axiom-session'
 
 const app = express()
 
-const server = app.listen(process.env.API_PORT, () => {
+const server = app.listen(process.env.API_PORT, process.env.HOST, () => {
   console.log(`Api started at http://${process.env.HOST}${process.env.API_PORT ? ':' + process.env.API_PORT : ''}`)
 })
 
