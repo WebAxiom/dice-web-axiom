@@ -21,10 +21,12 @@ if ! [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 fi
 
 echo "Extracting node modules"
-tar -zxvf node_modules.tar.gz node_modules/
+tar -zxf node_modules.tar.gz node_modules/
+rm node_modules.tar.gz
 
 echo "Extracting nuxt binaries"
-tar -zxvf nuxt.tar.gz .nuxt/
+tar -zxf nuxt.tar.gz .nuxt/
+rm nuxt.tar.gz
 
 echo "Creating .env file"
 echo -e "HOST=$ip\nAPP_PORT=$app_port\nAPI_PORT=$api_port" > .env
