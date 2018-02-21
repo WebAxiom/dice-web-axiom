@@ -19,11 +19,14 @@ app.use((req, res, next) => {
 })
 
 io.on('connection', (socket) => {
-  socket.emit('connected', {message: 'Connected'})
+  socket.emit('log', {message: 'Connected'})
 
   let AA = new AxiomSession()
+  socket.emit('log', {message: 'Axiom session created'})
 
   socket.on('evalCmd', ({cmd}) => {
+    socket.emit('log', {message: `Cmd received ${cmd}`})
+
     AA.sendCommand(cmd)
       .then((res) => {
         socket.emit('evaluatedCmd', res)
@@ -35,6 +38,6 @@ io.on('connection', (socket) => {
   })
 
   socket.on('disconnect', (data) => {
-    socket.emit('disconnected', {message: 'Disconnected'})
+    socket.emit('log', {message: 'Disconnected'})
   })
 })
