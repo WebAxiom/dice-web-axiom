@@ -1,13 +1,8 @@
 {
-  "name": "dice-axiom",
+  "name": "dice-web-axiom",
   "version": "1.0.0",
-  "description": "Axiom interface for UoE DICE.",
+  "description": "",
   "main": "index.js",
-  "scripts": {
-    "start": "bash start-services.sh"
-  },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -19,5 +14,19 @@
     "socket.io": "^2.0.4",
     "vue": "^2.5.13",
     "vuetify": "^1.0.2"
-  }
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "bash start-services.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webaxiom/dice-web-axiom.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/webaxiom/dice-web-axiom/issues"
+  },
+  "homepage": "https://github.com/webaxiom/dice-web-axiom#readme"
 }
