@@ -29,10 +29,12 @@ io.on('connection', (socket) => {
 
     AA.sendCommand(cmd)
       .then((res) => {
+        socket.emit('log', {message: `Cmd evaluated ${res}`})
         socket.emit('evaluatedCmd', res)
       })
       .catch((err) => {
         // TODO: LOG
+        socket.emit('log', {message: `Error caught ${err}`})
         socket.emit('evaluatedCmd', {sysError: err})
       })
   })

@@ -40,8 +40,7 @@ export class AxiomSession {
             let output = split[split.length - 3]
             let lineno = parseInt(split[split.length - 4])
             resolve({output, lineno})
-          }
-          else {
+          } else {
             reject(new Error('Failed to split output'))
           }
 
