@@ -4,7 +4,7 @@
   "description": "Axiom interface for UoE DICE.",
   "main": "index.js",
   "scripts": {
-    "start": "bash start-interface.sh"
+    "start": "bash start-services.sh"
   },
   "author": "",
   "license": "ISC",
