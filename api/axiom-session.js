@@ -1,51 +1,66 @@
-import nexpect from 'nexpect'
+import { spawn } from 'child_process'
 import { AxiomCommand } from './models'
 
 export class AxiomSession {
   constructor () {
-    // TODO: try/catch
-    // process.chdir('/input_files')
+    this.axiom = spawn('axiom', ['-noht', '-noclef', '-nox'])
     this.history = []
+    this.buffer = []
+    this.__nxtCmd__ = null
+    this.stdout = ''
+    this.axiom.stdout.on('data', this.processChunk.bind(this))
+    this.axiom.stdin.setEncoding('utf-8')
+    this.sendCommand(')set output tex on\n')
   }
 
   sendCommand (cmd) {
     return new Promise((resolve, reject) => {
-      // TODO: Prepare the cmd - remove spaces, etc.
       let axiomCommand = new AxiomCommand(cmd)
       this.history.push(axiomCommand)
-      this.exec(this.history)
-        .then(({output, lineno}) => {
-          console.log(output)
-          axiomCommand.setOutput(output)
-          axiomCommand.setLineNo(lineno)
-          axiomCommand.parseCommand()
-          resolve(axiomCommand.getPayload())
-        })
-        .catch((err) => reject(err))
+      this.exec(axiomCommand)
+        .then(
+          ({output, lineno}) => {
+            axiomCommand.setOutput(output)
+            axiomCommand.setLineNo(lineno)
+            axiomCommand.parseCommand()
+            resolve(axiomCommand.getPayload())
+          },
+          (err) => reject(err)
+        )
     })
   }
 
-  exec (aCommands) {
-    let proc = nexpect.spawn('axiom -noht').wait('->').sendline(')set output tex on').wait('->')
-    aCommands.forEach((aCmd) => { proc = proc.sendline(aCmd.getCommand()).wait('->') })
-    proc = proc.sendline(')quit').sendline('y')
+  processChunk (chunk) {
+    this.stdout += chunk.toString()
+    let match
+    while ((match = /\((\d+)\)\s*->([\s\S]*?)(?=\(\d+\)\s*->)/g.exec(this.stdout)) !== null) {
+      this.__nxtCmd__ = {lineno: match[1], output: match[2]}
+      console.log(this.__nxtCmd__)
+      this.stdout = this.stdout.substr(match.index + match[0].length - 1)
+    }
+  }
+  // TODO: For long commands this will essentially become an infinite loop
+  // TODO: Look for better solutions
+  __nextCommand__ (timeout = 100) {
     return new Promise((resolve, reject) => {
-      proc.run((err, stdout, exitcode) => {
-        if (err) {
-          reject(err)
-        } else {
-          let text = stdout.join('\n')
-          let split = text.split(/\((\d+)\)\s+->/)
-          if (split.length >= 4) {
-            let output = split[split.length - 3]
-            let lineno = parseInt(split[split.length - 4])
-            resolve({output, lineno})
-          } else {
-            reject(new Error('Failed to split output'))
-          }
-
-        }
-      })
+      if (this.__nxtCmd__ === null) {
+        setTimeout(() => resolve(this.__nextCommand__()), timeout)
+      } else {
+        const cmd = this.__nxtCmd__
+        this.__nxtCmd__ = null
+        resolve(cmd)
+      }
     })
+  }
+
+  nextCommand () {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve(this.__nextCommand__()), 0)
+    })
+  }
+
+  exec (cmd) {
+    this.axiom.stdin.write(`${cmd.getCommand()}\n`)
+    return this.nextCommand()
   }
 }
