@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 
 io.on('connection', (socket) => {
   socket.emit('log', {message: 'Connected'})
-
+  // TODO try/catch if axiom doesn't exist
   let AA = new AxiomSession()
   socket.emit('log', {message: 'Axiom session created'})
 
