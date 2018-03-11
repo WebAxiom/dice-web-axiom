@@ -16,7 +16,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "bash start-services.sh"
+    "api": "env-cmd .env babel-node api",
+    "app": "env-cmd .env nuxt start"
   },
   "repository": {
     "type": "git",

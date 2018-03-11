@@ -13,7 +13,6 @@ ip=$(hostname --ip-address)
 app_port=${1:-3000}
 api_port=${2:-3001}
 
-# echo "Creating .env file"
 echo -e "HOST=$ip\nAPP_PORT=$app_port\nAPI_PORT=$api_port" > .env
 
 if [ $(program_is_not_installed node) == "1" ]; then

@@ -35,7 +35,6 @@ export class AxiomSession {
     let match
     while ((match = /\((\d+)\)\s*->([\s\S]*?)(?=\(\d+\)\s*->)/g.exec(this.stdout)) !== null) {
       this.__nxtCmd__ = {lineno: match[1], output: match[2]}
-      console.log(this.__nxtCmd__)
       this.stdout = this.stdout.substr(match.index + match[0].length - 1)
     }
   }
