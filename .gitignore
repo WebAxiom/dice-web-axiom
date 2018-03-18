@@ -2,3 +2,6 @@
 package-lock.json
 .idea
 */.idea
+.nuxt/
+node_modules/
+node/
