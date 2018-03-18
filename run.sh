@@ -15,10 +15,11 @@ if [ $(program_is_installed axiom) == "0" ]; then
     echo "More information at http://www.axiom-developer.org/"
   else
     ip=$(hostname --ip-address)
-    app_port=${1:-3000}
-    api_port=${2:-3001}
+    working_dir=${1:-.}
+    app_port=${2:-3000}
+    api_port=${3:-3001}
 
-    echo -e "HOST=$ip\nAPP_PORT=$app_port\nAPI_PORT=$api_port" > .env
+    echo -e "HOST=$ip\nAPP_PORT=$app_port\nAPI_PORT=$api_port\nWORKING_DIR=$working_dir" > .env
 
 
 
